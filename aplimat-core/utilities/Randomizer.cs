@@ -4,30 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aplimat_labs.Utilities
+namespace aplimat_core.utilities
 {
     public class Randomizer
     {
-        private double min, max;
+        private double d_min, d_max;
+        private int min, max;
         private Random random;
 
-        public Randomizer(int _min, int _max)
+        public Randomizer(int min, int max)
         {
-            this.min = _min;
-            this.max = _max + 1;
-
+            this.min = min;
+            this.max = max + 1;
             random = new Random();
         }
-        public double GenerateDouble()
+
+        public Randomizer(double d_min, double d_max)
         {
-            return random.NextDouble() * (min - max) + min;
+            this.d_min = d_min;
+            this.d_max = d_max + 1;
+            this.random = new Random();
         }
-
-
 
         public int Generate()
         {
-            return (int)random.Next((int)min, (int)max);
+            return random.Next(min, max);
+        }
+
+        public double GenerateDouble()
+        {
+            return random.NextDouble() * (d_max - d_min) + d_min;
         }
     }
 }
