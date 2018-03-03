@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aplimat_core.models
+namespace aplimat_labs.Models
 {
     public class Movable
     {
@@ -13,11 +13,19 @@ namespace aplimat_core.models
         public Vector3 Acceleration;
         public float Mass = 1;
 
+        public Movable()
+        {
+            this.Position = new Vector3();
+            this.Velocity = new Vector3();
+            this.Acceleration = new Vector3();
+        }
+
         public void ApplyForce(Vector3 force)
         {
-            // F = MA
-            // A = F/M
-            this.Acceleration += (force / Mass); //force accumulation
+            //f = MA
+            //A = F/M
+            this.Acceleration += (force / Mass);
         }
+
     }
 }

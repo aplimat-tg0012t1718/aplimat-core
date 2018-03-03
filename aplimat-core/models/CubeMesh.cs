@@ -1,77 +1,72 @@
 ﻿using SharpGL;
+using SharpGL.SceneGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace aplimat_core.models
+namespace aplimat_labs.Models
 {
     public class CubeMesh : Movable
     {
-        public Vector3 Scale = new Vector3(1, 1, 1);
-
         public CubeMesh()
         {
             this.Position = new Vector3();
-            this.Velocity = new Vector3();
-            this.Acceleration = new Vector3();
-
-            this.Scale.y /= 2;
         }
+
         public CubeMesh(Vector3 initPos)
         {
             this.Position = initPos;
-            this.Velocity = new Vector3();
-            this.Acceleration = new Vector3();
-
-            this.Scale.y /= 2;
         }
-
         public CubeMesh(float x, float y, float z)
         {
-            this.Position = new Vector3();
-            this.Velocity = new Vector3();
-            this.Acceleration = new Vector3();
-            this.Position.x = x;
-            this.Position.y = y;
-            this.Position.z = z;
-
-            this.Scale.y /= 2;
+            this.Position = new Vector3(x, y, z);
         }
 
         public void Draw(OpenGL gl)
         {
-            
             gl.Begin(OpenGL.GL_TRIANGLE_STRIP);
-            //Front face
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y + this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y - this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y + this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y - this.Scale.y, this.Position.z + 0.5f);
-            //Right face
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y + this.Scale.y, this.Position.z - this.Scale.z);
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y - this.Scale.y, this.Position.z - this.Scale.z);
-            //Back face
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y + this.Scale.y, this.Position.z - this.Scale.z);
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y - this.Scale.y, this.Position.z - this.Scale.z);
-            //Left face
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y + this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y - this.Scale.y, this.Position.z + 0.5f);
+
+
+
+
+            //frontface
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y + 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y - 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y + 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y - 0.5f, this.Position.z + 0.5f);
+
+
+
+            //rightface
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y + 0.5f, this.Position.z - 0.5f);
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y - 0.5f, this.Position.z - 0.5f);
+
+            //backface
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y + 0.5f, this.Position.z - 0.5f);
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y - 0.5f, this.Position.z - 0.5f);
+
+            //leftface
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y + 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y - 0.5f, this.Position.z + 0.5f);
+
+            //topface
+            gl.Begin(OpenGL.GL_TRIANGLE_STRIP);
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y + 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y + 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y + 0.5f, this.Position.z - 0.5f);
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y + 0.5f, this.Position.z - 0.5f);
+
             gl.End();
+
+            //bottomface
             gl.Begin(OpenGL.GL_TRIANGLE_STRIP);
-            //Top face
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y + this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y + this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y + this.Scale.y, this.Position.z - this.Scale.z);
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y + this.Scale.y, this.Position.z - this.Scale.z);
-            gl.End();
-            gl.Begin(OpenGL.GL_TRIANGLE_STRIP);
-            //Bottom face
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y - this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y - this.Scale.y, this.Position.z + 0.5f);
-            gl.Vertex(this.Position.x - this.Scale.x, this.Position.y - this.Scale.y, this.Position.z - this.Scale.z);
-            gl.Vertex(this.Position.x + this.Scale.x, this.Position.y - this.Scale.y, this.Position.z - this.Scale.z);
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y - 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y - 0.5f, this.Position.z + 0.5f);
+            gl.Vertex(this.Position.x - 0.5f, this.Position.y - 0.5f, this.Position.z - 0.5f);
+            gl.Vertex(this.Position.x + 0.5f, this.Position.y - 0.5f, this.Position.z - 0.5f);
+            //gl.Color(0, 1, 0);
             gl.End();
 
             UpdateMotion();
@@ -81,7 +76,8 @@ namespace aplimat_core.models
         {
             this.Velocity += this.Acceleration;
             this.Position += this.Velocity;
-            this.Acceleration *= 0;
+            this.Acceleration *= 1;
+            //this.Position -= Velocity;
         }
     }
 }
