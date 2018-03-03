@@ -29,7 +29,13 @@ namespace aplimat_lab
             InitializeComponent();
 
         }
-
+        Randomizer rand = new Randomizer(0,30);
+        Randomizer sizeRand = new Randomizer(1, 5);
+        Randomizer massRand = new Randomizer(1, 10);
+        private List<CubeMesh> cubes = new List<CubeMesh>();
+        private Vector3 gravity = new Vector3(0.0f, -0.05f, 0.0f);
+        private Vector3 mouseForce = new Vector3(0.0f, 0.0f, 0.0f);
+        
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
@@ -40,6 +46,25 @@ namespace aplimat_lab
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
+
+            CubeMesh myCube = new CubeMesh();
+            myCube.Position = new Vector3((float)Gaussian.Generate(0,30), rand.Generate(), 0);
+            myCube.Scale = new Vector3(sizeRand.Generate(), sizeRand.Generate(), sizeRand.Generate());
+            myCube.Mass = massRand.Generate();
+
+            cubes.Add(myCube);
+
+            foreach(CubeMesh cube in cubes)
+            {
+                cube.ApplyForce(gravity);
+                cube.ApplyForce(mouseForce.Normalize());
+                cube.Draw(gl);
+                if(cube.Position.y <= -25)
+                {
+                    cube.Velocity /= -2;
+                }
+            }
+
         }
 
         #region Initialization
@@ -77,8 +102,8 @@ namespace aplimat_lab
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
             var position = e.GetPosition(this);
-            //to get X = (float)position.X - (float)Width / 2.0f;
-            //to get Y = -((float)position.Y - (float)Height / 2.0f);
+            mouseForce.x = (float)position.X - (float)Width / 2.0f;
+            mouseForce.y = -((float)position.Y - (float)Height / 2.0f);
         }
         #endregion
 
