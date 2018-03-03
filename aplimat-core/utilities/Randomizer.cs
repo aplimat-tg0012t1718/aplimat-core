@@ -22,5 +22,16 @@ namespace aplimat_core.utilities
         {
             return random.Next(min, max);
         }
+
+        public double GenerateDouble()
+        {
+            return random.NextDouble() * (max - min) + min;
+        }
+
+        public int GenerateInt()
+        {
+            return (int)random.Next((int)min, (int)max);
+        }
+
     }
 }
