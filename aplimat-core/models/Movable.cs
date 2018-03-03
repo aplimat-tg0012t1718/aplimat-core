@@ -1,4 +1,5 @@
-﻿using System;
+﻿using aplimat_core.utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace aplimat_core.models
 {
     public class Movable
     {
+        private Randomizer rng = new Randomizer(1, 3);
         public Vector3 Position;
         public Vector3 Velocity;
         public Vector3 Acceleration;

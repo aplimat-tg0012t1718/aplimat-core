@@ -21,15 +21,23 @@ namespace aplimat_lab
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
-
+     
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
+        private Vector3 mousePos = new Vector3();
+        private List<CubeMesh> myCubes = new List<CubeMesh>();
+        private Randomizer rng = new Randomizer(30, 50);
+        private Randomizer rngMass = new Randomizer(1,3);
+        private Vector3 gravity = new Vector3(0,-0.5f,0);
+        private Vector3 bounce = new Vector3(0, 2.0f, 0);
+        private bool isBouncing;
+       
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
@@ -40,6 +48,55 @@ namespace aplimat_lab
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
+
+            mousePos.Normalize();
+            mousePos *= 0.5f;
+            CubeMesh myCube = new CubeMesh();
+            myCube.Position = new Vector3((float)Gaussian.Generate(0, 30),rng.Generate(), 0);
+            myCube.Mass *= rngMass.Generate();
+            
+            myCubes.Add(myCube);
+
+            foreach(var cube in myCubes)
+            {
+                cube.Draw(gl);
+                cube.Velocity = new Vector3(mousePos.x, 0, 0);
+                cube.ApplyForce(gravity);
+
+                if(cube.Position.y <= -35)
+                {
+                    cube.ApplyForce(bounce);
+                    isBouncing = true;
+                }
+
+                if(isBouncing)
+                {
+                    cube.Velocity.y *=  2;
+                    
+
+                    isBouncing = false;
+                }
+
+                else if(!isBouncing)
+                {
+                    if(cube.Velocity.y <= 3)
+                    {
+                        cube.Velocity.y = 0;
+                    }
+                }
+               
+
+            }
+
+            
+
+           
+
+
+
+
+
+
         }
 
         #region Initialization
@@ -76,9 +133,15 @@ namespace aplimat_lab
         #region Mouse Func
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+
             var position = e.GetPosition(this);
+            mousePos = new Vector3 ((float)position.X,(float)position.Y,0);
+
+            mousePos.x = (float)position.X - (float)Width / 2.0f;
+            mousePos.y = -((float)position.Y - (float)Height / 2.0f);
             //to get X = (float)position.X - (float)Width / 2.0f;
             //to get Y = -((float)position.Y - (float)Height / 2.0f);
+            mousePos.y = -mousePos.y;
         }
         #endregion
 

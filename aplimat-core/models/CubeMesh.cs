@@ -1,15 +1,13 @@
-﻿using SharpGL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using aplimat_core.utilities;
+using SharpGL;
 
 namespace aplimat_core.models
 {
+   
     public class CubeMesh : Movable
     {
         public Vector3 Scale = new Vector3(1, 1, 1);
+        private Randomizer rng = new Randomizer(1, 3);
 
         public CubeMesh()
         {
@@ -18,6 +16,8 @@ namespace aplimat_core.models
             this.Acceleration = new Vector3();
 
             this.Scale.y /= 2;
+            this.Scale.y *= rng.Generate();
+            this.Scale.x *= rng.Generate();
         }
         public CubeMesh(Vector3 initPos)
         {
@@ -26,6 +26,8 @@ namespace aplimat_core.models
             this.Acceleration = new Vector3();
 
             this.Scale.y /= 2;
+            this.Scale.y *= rng.Generate();
+            this.Scale.x *= rng.Generate();
         }
 
         public CubeMesh(float x, float y, float z)
