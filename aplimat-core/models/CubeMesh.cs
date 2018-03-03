@@ -19,6 +19,17 @@ namespace aplimat_core.models
 
             this.Scale.y /= 2;
         }
+
+        public CubeMesh(int minRand, int maxRand)
+        {
+            this.Position = new Vector3();
+            this.Velocity = new Vector3();
+            this.Acceleration = new Vector3();
+
+            this.Scale.y /= 2;
+        }
+
+
         public CubeMesh(Vector3 initPos)
         {
             this.Position = initPos;
