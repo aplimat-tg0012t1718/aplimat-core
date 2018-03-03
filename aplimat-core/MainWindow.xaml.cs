@@ -23,19 +23,21 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
 
         }
+
+#region Variable Declarations
         Randomizer rand = new Randomizer(0,30);
         Randomizer sizeRand = new Randomizer(1, 5);
         Randomizer massRand = new Randomizer(1, 10);
         private List<CubeMesh> cubes = new List<CubeMesh>();
         private Vector3 gravity = new Vector3(0.0f, -0.05f, 0.0f);
         private Vector3 mouseForce = new Vector3(0.0f, 0.0f, 0.0f);
-        
+#endregion     
+
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
