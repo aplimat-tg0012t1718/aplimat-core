@@ -8,7 +8,7 @@ namespace aplimat_core.utilities
 {
     public static class Gaussian
     {
-        public static double Generate(double mean = 0, double stdDev = 1)
+        public static double Generate(double mean = 0, double stdDev = 30)
         {
             Random r = new Random();
 

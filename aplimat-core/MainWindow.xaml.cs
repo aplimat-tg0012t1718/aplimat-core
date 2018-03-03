@@ -24,6 +24,13 @@ namespace aplimat_lab
     public partial class MainWindow : Window
     {
 
+        private Randomizer rng = new Randomizer(30, 50);
+        private Randomizer massrng = new Randomizer(1, 3);
+        private Randomizer rngx = new Randomizer(0, 30);
+        private List<CubeMesh> myCubes = new List<CubeMesh>();
+        private Vector3 gravity = new Vector3(0.0f, -1.0f, 0.0f);
+        private Vector3 mousePos = new Vector3();
+      
         public MainWindow()
         {
             InitializeComponent();
@@ -32,16 +39,37 @@ namespace aplimat_lab
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
+            mousePos.Normalize();
             OpenGL gl = args.OpenGL;
-
+            int scale = massrng.Generate();
             // Clear The Screen And The Depth Buffer
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
+
+            CubeMesh myCube = new CubeMesh();
+            myCubes.Add(myCube);
+            myCube.Position = new Vector3(Gaussian.Generate(0, 30), rngx.Generate(), 0);
+            myCube.Scale = new Vector3(scale, scale, 0);
+            myCube.Mass = massrng.Generate();
+            
+            foreach (var cube in myCubes)
+            {
+                cube.Draw(gl);
+                cube.ApplyForce(gravity);
+                cube.ApplyForce(mousePos);
+                if (cube.Position.y <= -30.0f)
+                {
+                    cube.Velocity *= -1;
+                    cube.Velocity /= 1;
+                }
+            }
+            
         }
 
+       
         #region Initialization
 
 
@@ -76,9 +104,14 @@ namespace aplimat_lab
         #region Mouse Func
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            
             var position = e.GetPosition(this);
+            mousePos.x = (float)position.X - (float)Width / 2.0f;
+            mousePos.y = (float)position.Y - (float)Height / 2.0f;
+            mousePos.y = -mousePos.y;
             //to get X = (float)position.X - (float)Width / 2.0f;
             //to get Y = -((float)position.Y - (float)Height / 2.0f);
+
         }
         #endregion
 

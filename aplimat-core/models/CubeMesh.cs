@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using aplimat_core.utilities;
+using SharpGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace aplimat_core.models
             this.Position = new Vector3();
             this.Velocity = new Vector3();
             this.Acceleration = new Vector3();
-
-            this.Scale.y /= 2;
+           
+            this.Scale.y = 2;
         }
         public CubeMesh(Vector3 initPos)
         {
@@ -25,7 +26,7 @@ namespace aplimat_core.models
             this.Velocity = new Vector3();
             this.Acceleration = new Vector3();
 
-            this.Scale.y /= 2;
+            this.Scale.y = 2;
         }
 
         public CubeMesh(float x, float y, float z)
@@ -37,7 +38,7 @@ namespace aplimat_core.models
             this.Position.y = y;
             this.Position.z = z;
 
-            this.Scale.y /= 2;
+            this.Scale.y /= 3;
         }
 
         public void Draw(OpenGL gl)
