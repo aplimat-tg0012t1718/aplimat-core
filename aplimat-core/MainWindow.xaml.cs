@@ -23,13 +23,14 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        Random r = new Random();
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
+        private List<CubeMesh> Snow = new List<CubeMesh>();
+        private Vector3 gravity = new Vector3(0, -0.02f, 0);
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
@@ -40,7 +41,23 @@ namespace aplimat_lab
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
+
+           
+
+            CubeMesh cubes = new CubeMesh();
+            cubes.Position = new Vector3(Gaussian.Generate(0,30), r.Next(30, 50), 0);
+            cubes.Mass = r.Next(1, 5);
+            Snow.Add(cubes);
+
+            foreach(var cube in Snow)
+            {
+                cube.Draw(gl);
+                cube.Velocity += gravity;
+                cube.Position.x += mousePos.x / 100;
+            }
         }
+
+        private Vector3 mousePos = new Vector3();
 
         #region Initialization
 
@@ -79,6 +96,8 @@ namespace aplimat_lab
             var position = e.GetPosition(this);
             //to get X = (float)position.X - (float)Width / 2.0f;
             //to get Y = -((float)position.Y - (float)Height / 2.0f);
+
+            mousePos.x = (float)position.X - (float)Width / 2.0f;
         }
         #endregion
 

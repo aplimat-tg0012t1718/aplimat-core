@@ -9,15 +9,18 @@ namespace aplimat_core.models
 {
     public class CubeMesh : Movable
     {
+
         public Vector3 Scale = new Vector3(1, 1, 1);
+
 
         public CubeMesh()
         {
+            Random i = new Random();
             this.Position = new Vector3();
             this.Velocity = new Vector3();
             this.Acceleration = new Vector3();
+            this.Scale = new Vector3(i.Next(1, 3), i.Next(1, 3), i.Next(1, 3));
 
-            this.Scale.y /= 2;
         }
         public CubeMesh(Vector3 initPos)
         {
@@ -25,7 +28,6 @@ namespace aplimat_core.models
             this.Velocity = new Vector3();
             this.Acceleration = new Vector3();
 
-            this.Scale.y /= 2;
         }
 
         public CubeMesh(float x, float y, float z)
