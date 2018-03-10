@@ -24,11 +24,58 @@ namespace aplimat_lab
     public partial class MainWindow : Window
     {
 
+        private List<CubeMesh> cubes = new List<CubeMesh>();
+
+        private CubeMesh heavyCube = new CubeMesh(-5, 20, 0);
+        private CubeMesh lightCube = new CubeMesh(5, 20, 0);
+
+        private Vector3 wind = new Vector3(0.1f, 0, 0);
+
+        private Vector3 friction = new Vector3();
+
         public MainWindow()
         {
             InitializeComponent();
 
+            heavyCube.Mass = 3;
+            lightCube.Mass = 1;
+
+            heavyCube.Scale = new Vector3(1 * heavyCube.Mass, 1 * heavyCube.Mass, 1 * heavyCube.Mass);
+            lightCube.Scale = new Vector3(1, 1, 1);
+
+            int xPos = 50;
+
+            for (int i = 0; i <= 10; i++)
+            {
+                cubes.Add(new CubeMesh()
+                {
+                    Position = new Vector3(xPos, 20, 0),
+                    Mass = i
+                });
+                xPos -= 10;
+            }
+
         }
+
+        float boxT = 30.0f;
+        float boxB = -30.0f;
+        float boxL = -50.0f;
+        float boxR = 50.0f;
+
+        //private List<CubeMesh> myCubes = new List<CubeMesh>();
+        ////private CubeMesh myCube = new CubeMesh(0, 0, 0);
+        //private Randomizer yPos = new Randomizer(30, 50);
+        //private Randomizer cubeM = new Randomizer(1, 3);
+        private Vector3 mousePos = new Vector3(0, 0, 0);
+
+        //private CubeMesh test = new CubeMesh()
+        //{
+        //    //Acceleration = new Vector3(0.1f, 0, 0),
+        //    Position = new Vector3(0, 20, 0),
+        //    Mass = 2
+        //};
+
+        
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
@@ -40,7 +87,96 @@ namespace aplimat_lab
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
+
+
+            //gl.Color(1.0f, 0, 0);
+
+            //heavyCube.Draw(gl);
+            //lightCube.Draw(gl);
+
+            //physicsTest(heavyCube);
+            //physicsTest(lightCube);
+
+            
+
+            foreach (var cube in cubes)
+            {
+                
+
+                cube.Draw(gl);
+                cube.Scale = new Vector3(1 * cube.Mass/2, 1 * cube.Mass/2, 1 * cube.Mass/2);
+
+                
+                
+
+                physicsTest(cube);
+            }
+
+
+            #region quiz
+            //CubeMesh myCube = new CubeMesh();
+            //myCube.Mass = cubeM.GenerateInt();
+            //myCube.Position = new Vector3(Gaussian.Generate(0, 30), yPos.GenerateInt(), 0);
+
+
+            //myCubes.Add(myCube);
+
+            //foreach (var cube in myCubes)
+            //{
+            //    cube.Draw(gl);
+
+            //    gravity(cube);
+            //}
+
+
+            //test.Draw(gl);
+            //Console.WriteLine(test.Position.y);
+            //gravity(test);
+            //gravity(myCube);
+            #endregion
+
+
+
         }
+
+        private void physicsTest(CubeMesh cube)
+        {
+            //mousePos.Normalize();
+            //mousePos *= 1;
+            //cube.ApplyForce(mousePos);
+
+            //var frictionCoefficient = 0.05f;
+            //var normalForce = 1;
+            //var frictionMagnitude = frictionCoefficient * normalForce;
+
+            //var friction = cube.Velocity;
+            //friction *= -1;
+            //friction.Normalize();
+            //friction *= frictionMagnitude;
+
+            cube.ApplyGravity();
+            cube.ApplyFriction();
+            //cube.ApplyForce(friction);
+            //cube.ApplyForce(wind);
+
+            if (cube.Position.y <= boxB)
+            {
+                cube.Position.y = boxB;
+                cube.Velocity.y *= -1;
+            }
+            
+            if (cube.Position.x >= boxR)
+            {
+                cube.Position.x = boxR;
+                cube.Velocity.x *= -1;
+            }
+            if (cube.Position.x <= boxL)
+            {
+                cube.Position.x = boxL;
+                cube.Velocity.x *= -1;
+            }
+        }
+
 
         #region Initialization
 
@@ -79,6 +215,12 @@ namespace aplimat_lab
             var position = e.GetPosition(this);
             //to get X = (float)position.X - (float)Width / 2.0f;
             //to get Y = -((float)position.Y - (float)Height / 2.0f);
+            mousePos.x = (float)position.X - (float)Width / 2.0f;
+            mousePos.y = (float)position.Y - (float)Height / 2.0f;
+
+            mousePos.y = -mousePos.y;
+
+            //Console.WriteLine("mouse x:" + mousePos.x + " y:" + mousePos.y);
         }
         #endregion
 
