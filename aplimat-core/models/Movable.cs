@@ -19,5 +19,25 @@ namespace aplimat_core.models
             // A = F/M
             this.Acceleration += (force / Mass); //force accumulation
         }
+
+        public void ApplyGravity(float gravity = 0.1f)
+        {
+            this.Acceleration += (new models.Vector3(0, -gravity * Mass, 0) / Mass);
+        }
+
+        public void ApplyFriction(float frictionCoefficient = 0.05f, float normalForce = 1)
+        {
+            //var frictionCoefficient = 0.05f;
+            //var normalForce = 1;
+            var frictionMagnitude = frictionCoefficient * normalForce;
+
+            var friction = this.Velocity;
+            friction *= -1;
+            friction.Normalize();
+            friction *= frictionMagnitude;
+
+
+            this.Acceleration += (friction / Mass);
+        }
     }
 }
