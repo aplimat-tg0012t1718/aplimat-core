@@ -23,20 +23,35 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Variable Declarations
+
+        private List<CubeMesh> cubes = new List<CubeMesh>();
+        private Vector3 wind = new Vector3(0.5f, 0.0f, 0.0f);
+        private Vector3 mouseForce = new Vector3(0.0f, 0.0f, 0.0f);
+        private CubeMesh heavyCube = new CubeMesh(-5, 20 ,0);
+        private CubeMesh lightCube = new CubeMesh(5, 20, 0);
+
+        #endregion
         public MainWindow()
         {
             InitializeComponent();
+            int xPos = 50;
+            //for(int i = 0; i<= 10; i++)
+            //{
+            //    cubes.Add(new CubeMesh()
+            //    {
+            //        Position = new Vector3(xPos, 20, 0),
+            //        Mass = i
+            //    });
+            //}
+            heavyCube.Mass = 3;
+            lightCube.Mass = 1;
 
+            heavyCube.Scale = new Vector3(1 * heavyCube.Mass, 1 * heavyCube.Mass, 1 * heavyCube.Mass);
+            lightCube.Scale = new Vector3(1 * lightCube.Mass, 1 * lightCube.Mass, 1 * lightCube.Mass);
         }
 
-#region Variable Declarations
-        Randomizer rand = new Randomizer(0,30);
-        Randomizer sizeRand = new Randomizer(1, 5);
-        Randomizer massRand = new Randomizer(1, 10);
-        private List<CubeMesh> cubes = new List<CubeMesh>();
-        private Vector3 gravity = new Vector3(0.0f, -0.05f, 0.0f);
-        private Vector3 mouseForce = new Vector3(0.0f, 0.0f, 0.0f);
-#endregion     
+
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
@@ -49,22 +64,23 @@ namespace aplimat_lab
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
 
-            CubeMesh myCube = new CubeMesh();
-            myCube.Position = new Vector3((float)Gaussian.Generate(0,30), rand.Generate(), 0);
-            myCube.Scale = new Vector3(sizeRand.Generate(), sizeRand.Generate(), sizeRand.Generate());
-            myCube.Mass = massRand.Generate();
+            heavyCube.Draw(gl);
+            lightCube.Draw(gl);
 
-            cubes.Add(myCube);
+            heavyCube.ApplyGravity();
+            lightCube.ApplyGravity();
+            heavyCube.ApplyForce(wind);
+            lightCube.ApplyForce(wind);
 
-            foreach(CubeMesh cube in cubes)
+            if(heavyCube.Position.y <= -40)
             {
-                cube.ApplyForce(gravity);
-                cube.ApplyForce(mouseForce.Normalize());
-                cube.Draw(gl);
-                if(cube.Position.y <= -25)
-                {
-                    cube.Velocity /= -2;
-                }
+                heavyCube.Position.y = -40;
+                heavyCube.Velocity *= -1;
+            }
+            if (lightCube.Position.y <= -40)
+            {
+                lightCube.Position.y = -40;
+                lightCube.Velocity *= -1;
             }
 
         }
