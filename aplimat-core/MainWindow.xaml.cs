@@ -23,13 +23,37 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<CubeMesh> cubes = new List<CubeMesh>();
+
+        private CubeMesh heavyCube = new CubeMesh(-5, 20, 0);
+        private CubeMesh lightCube = new CubeMesh(5, 20, 0);
+
+        private Vector3 gravity = new Vector3(0, 0.1f, 0);
+        private Vector3 wind = new Vector3(0.1f, 0, 0);
 
         public MainWindow()
         {
             InitializeComponent();
 
+            heavyCube.Mass = 3;
+            lightCube.Mass = 1;
+
+            heavyCube.Scale = new Vector3(1 * heavyCube.Mass, 1 * heavyCube.Mass, 1 *heavyCube.Mass);
+            lightCube.Scale = new Vector3(1,1,1);
+            //int xPos = 50;
+
+            //for (int i = 0; i <= 10; i++)
+            //{
+            //    cubes.Add(new CubeMesh()
+            //    {
+            //        Position = new Vector3(xPos, 20, 0),
+            //        Mass = i
+            //    });
+            //    xPos -= 10;
+            //}
         }
 
+        int counter = 0;
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
@@ -40,6 +64,39 @@ namespace aplimat_lab
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
+
+            heavyCube.Draw(gl);
+            lightCube.Draw(gl);
+
+            heavyCube.ApplyGravity();
+            lightCube.ApplyGravity();
+
+            heavyCube.ApplyForce(wind);
+            lightCube.ApplyForce(wind);
+
+            if (heavyCube.Position.y <= -40)
+            {
+                heavyCube.Position.y = -40;
+                heavyCube.Velocity.y *= -1;
+            }
+
+            if (lightCube.Position.y <= -40)
+            {
+                lightCube.Position.y = -40;
+                lightCube.Velocity.y *= -1;
+            }
+
+            if (heavyCube.Position.x >= 50)
+            {
+                heavyCube.Position.x = 50;
+                heavyCube.Velocity.x *= -1;
+            }
+
+            if (lightCube.Position.x >= 50)
+            {
+                lightCube.Position.x = 50;
+                lightCube.Velocity.x *= -1;
+            }
         }
 
         #region Initialization
