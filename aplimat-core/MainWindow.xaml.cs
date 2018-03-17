@@ -31,7 +31,9 @@ namespace aplimat_lab
 
         private Vector3 wind = new Vector3(0.1f, 0, 0);
 
-        private Vector3 friction = new Vector3();
+        private CubeMesh myCube = new CubeMesh(0, 20, 0);
+
+        private Liquid ocean = new Liquid(0, 0, 100, 50, 0.8f);
 
         public MainWindow()
         {
@@ -42,26 +44,15 @@ namespace aplimat_lab
 
             heavyCube.Scale = new Vector3(1 * heavyCube.Mass, 1 * heavyCube.Mass, 1 * heavyCube.Mass);
             lightCube.Scale = new Vector3(1, 1, 1);
-
-            int xPos = 50;
-
-            for (int i = 0; i <= 10; i++)
-            {
-                cubes.Add(new CubeMesh()
-                {
-                    Position = new Vector3(xPos, 20, 0),
-                    Mass = i
-                });
-                xPos -= 10;
-            }
-
+            
         }
 
-        float boxT = 30.0f;
-        float boxB = -30.0f;
-        float boxL = -50.0f;
-        float boxR = 50.0f;
-
+        float boxT = 40.0f;
+        float boxB = -40.0f;
+        float boxL = -55.0f;
+        float boxR = 55.0f;
+        int cnt = 0;
+        int xPos = 50;
         //private List<CubeMesh> myCubes = new List<CubeMesh>();
         ////private CubeMesh myCube = new CubeMesh(0, 0, 0);
         //private Randomizer yPos = new Randomizer(30, 50);
@@ -79,6 +70,8 @@ namespace aplimat_lab
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
+            cnt++;
+
             OpenGL gl = args.OpenGL;
 
             // Clear The Screen And The Depth Buffer
@@ -88,29 +81,52 @@ namespace aplimat_lab
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
 
+            ocean.Draw(gl);
 
-            //gl.Color(1.0f, 0, 0);
 
-            //heavyCube.Draw(gl);
-            //lightCube.Draw(gl);
-
-            //physicsTest(heavyCube);
-            //physicsTest(lightCube);
-
+            gl.Color(1.0f, 1.0f, 1.0f);
             
+            if (cubes.Count <= 10)
+            {
+                for (int i = 0; i <= 10; i++)
+                {
+                    cubes.Add(new CubeMesh()
+                    {
+                        Position = new Vector3(xPos, 20, 0),
+                        Mass = i
+                    });
+                    xPos -= 10;
+                }
+            }
 
             foreach (var cube in cubes)
             {
-                
-
                 cube.Draw(gl);
                 cube.Scale = new Vector3(1 * cube.Mass/2, 1 * cube.Mass/2, 1 * cube.Mass/2);
-
                 
-                
-
                 physicsTest(cube);
             }
+            Console.WriteLine(cnt);
+
+            if (cnt == 100)
+            {
+                cnt = 0;
+                xPos = 50;
+                cubes.Clear();
+                
+            }
+
+            //myCube.Draw(gl);
+            //myCube.ApplyGravity();
+            //if(myCube.Position.y <= -40)
+            //{
+            //    myCube.Position.y = -40;
+            //    myCube.Velocity *= -1;
+            //}
+
+
+            
+
 
 
             #region quiz
@@ -156,9 +172,14 @@ namespace aplimat_lab
 
             cube.ApplyGravity();
             cube.ApplyFriction();
-            //cube.ApplyForce(friction);
-            //cube.ApplyForce(wind);
-
+            
+            if (ocean.Contains(cube))
+            {
+                var dragForce = ocean.CalculateDragForce(cube);
+                cube.ApplyForce(dragForce);
+                cube.ApplyForce(wind);
+            }
+            
             if (cube.Position.y <= boxB)
             {
                 cube.Position.y = boxB;

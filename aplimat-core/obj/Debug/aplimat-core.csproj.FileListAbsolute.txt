@@ -1,4 +1,9 @@
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\aplimat-core.exe.config
+C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat-core.csprojResolveAssemblyReference.cache
+C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\MainWindow.g.cs
+C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\App.g.cs
+C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat-core_MarkupCompile.cache
+C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat-core_MarkupCompile.lref
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\aplimat-core.exe
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\aplimat-core.pdb
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\SharpGL.dll
@@ -10,11 +15,6 @@ C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\SharpGL.SceneGraph
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\SharpGL.SceneGraph.xml
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\SharpGL.WPF.pdb
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\bin\Debug\SharpGL.WPF.xml
-C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat-core.csprojResolveAssemblyReference.cache
-C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\MainWindow.g.cs
-C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\App.g.cs
-C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat-core_MarkupCompile.cache
-C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat-core_MarkupCompile.lref
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\MainWindow.baml
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat-core.g.resources
 C:\Users\11380403\Desktop\aplimat-core\aplimat-core\obj\Debug\aplimat_core.Properties.Resources.resources

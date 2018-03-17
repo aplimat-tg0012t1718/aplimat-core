@@ -19,7 +19,7 @@ namespace aplimat_core.models
             this.Velocity = new Vector3();
             this.Acceleration = new Vector3();
 
-            this.Scale.y /= 2;
+            //this.Scale.y /= 2;
             //this.Scale = new Vector3(cubeS.GenerateInt(), cubeS.GenerateInt(), cubeS.GenerateInt());
         }
         public CubeMesh(Vector3 initPos)
@@ -28,7 +28,7 @@ namespace aplimat_core.models
             this.Velocity = new Vector3();
             this.Acceleration = new Vector3();
 
-            this.Scale.y /= 2;
+            //this.Scale.y /= 2;
             //this.Scale = new Vector3(cubeS.GenerateInt(), cubeS.GenerateInt(), cubeS.GenerateInt());
         }
 
@@ -41,7 +41,7 @@ namespace aplimat_core.models
             this.Position.y = y;
             this.Position.z = z;
 
-            this.Scale.y /= 2;
+            //this.Scale.y /= 2;
             //this.Scale = new Vector3(cubeS.GenerateInt(), cubeS.GenerateInt(), cubeS.GenerateInt());
         }
 
