@@ -19,5 +19,10 @@ namespace aplimat_core.models
             // A = F/M
             this.Acceleration += (force / Mass); //force accumulation
         }
+
+        public void ApplyGravity(float gravity = 0.1f)
+        {
+            this.Acceleration += (new models.Vector3(0, -gravity * Mass, 0) /Mass);
+        }
     }
 }

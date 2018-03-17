@@ -27,7 +27,7 @@ namespace aplimat_core.models
             this.Velocity = new Vector3();
             this.Acceleration = new Vector3();
 
-            this.Scale.y /= 2;
+            //this.Scale.y /= 2;
         }
 
         public CubeMesh(float x, float y, float z)
@@ -39,7 +39,7 @@ namespace aplimat_core.models
             this.Position.y = y;
             this.Position.z = z;
 
-            this.Scale.y /= 2;
+            //this.Scale.y /= 2;
         }
 
         public void Draw(OpenGL gl)

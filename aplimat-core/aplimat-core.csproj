@@ -63,6 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="models\Liquid.cs" />
     <Compile Include="utilities\Gaussian.cs" />
     <Compile Include="utilities\Randomizer.cs" />
     <Page Include="MainWindow.xaml">
