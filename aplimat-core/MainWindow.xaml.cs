@@ -23,6 +23,12 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<CubeMesh> Cubes = new List<CubeMesh>();
+        private Vector3 Wind =new Vector3(0.05f,0,0);
+        private Liquid ocean = new Liquid(0, 0, 100, 50, 0.8f);
+
+        private CubeMesh heavyCube = new CubeMesh(-5, 20, 0);
+        private CubeMesh lightCube = new CubeMesh(5, 20, 0);
 
         public MainWindow()
         {
@@ -30,20 +36,10 @@ namespace aplimat_lab
 
         }
 
-        private List<CubeMesh> cubes = new List<CubeMesh>();
-
-        private Randomizer scRandomizer = new Randomizer(0, 3);
-        private Randomizer yRandomizer = new Randomizer(30, 50);
-        private Randomizer mRandomizer = new Randomizer(1, 6);
-
-        private Vector3 mousePos = new Vector3();
-        private Vector3 gravity = new Vector3(0, -.4f, 0);
-        private Vector3 mGravity = new Vector3();
-
-        private float yBottom = -45;
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
+            this.Title = "Water Resistance";
             OpenGL gl = args.OpenGL;
 
             /// Clear The Screen And The Depth Buffer
@@ -53,28 +49,47 @@ namespace aplimat_lab
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
 
+            ocean.Draw(gl);
+
+            gl.Color(1.0f, 1.0f, 1.0f);
+
             /// Draw Cubes
+            /// 
 
-            mousePos.Normalize();
-            mousePos *= 10;
-            mGravity = mousePos;
+            Cubes.Add(heavyCube);
+            Cubes.Add(new CubeMesh(-3, 20, 0));
+            Cubes.Add(new CubeMesh(-2, 20, 0));
+            Cubes.Add(new CubeMesh(-1, 20, 0));
+            Cubes.Add(new CubeMesh(0, 20, 0));
+            Cubes.Add(new CubeMesh(1, 20, 0));
+            Cubes.Add(new CubeMesh(2, 20, 0));
+            Cubes.Add(new CubeMesh(3, 20, 0));
+            Cubes.Add(new CubeMesh(4, 20, 0));
+            Cubes.Add(lightCube);
 
-            CubeMesh cube = new CubeMesh();
-            cube.Position = new aplimat_core.models.Vector3((float)Gaussian.Generate(0, 30), (float)yRandomizer.Generate(), 0);
-            float cubeScale = (float)scRandomizer.Generate();
-            cube.Scale = new Vector3(cubeScale, cubeScale, 1);
-            cube.Mass = mRandomizer.Generate();
-
-            cubes.Add(cube);
-
-            foreach (var c in cubes)
+            for (int x = 0; x < 10; x++)
             {
-                c.Draw(gl);
-                c.ApplyForce(gravity);
-                if(c.Position.y <= yBottom)
+                Cubes[x].Draw(gl);
+                Cubes[x].Mass = 10 - x;
+                Cubes[x].applyGravity();
+            }
+
+            for (int x = 0; x < 10; x++)
+            {
+                if (Cubes[x].Position.y <= -40)
                 {
-                    c.Velocity.y *= -1;
-                    c.Velocity /= 2;
+                    Cubes[x].Position.y = -40;
+                    Cubes[x].Velocity.y *= -1;
+                }
+            }
+
+            for (int x = 0; x < 10; x++)
+            {
+                if (ocean.Contains(Cubes[x]))
+                {
+                    var dragForce = ocean.CalculateDragForce(Cubes[x]);
+                    Cubes[x].ApplyForce(dragForce);
+                    Cubes[x].ApplyForce(Wind);
                 }
             }
         }
@@ -114,18 +129,6 @@ namespace aplimat_lab
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
             var position = e.GetPosition(this);
-            mousePos.x = (float)position.X - (float)Width / 2.0f;
-            mousePos.y = -((float)position.Y - (float)Height / 2.0f);
-            //mousePos.y = -mousePos.y;
-
-            foreach(var c in cubes)
-            {
-                mousePos.Normalize();
-                mousePos /= 10 ;
-                c.ApplyForce(mousePos);
-            }
-
-            Console.WriteLine("mouse x:" + mousePos.x + "    y:" + mousePos.y);
         }
         #endregion
 
