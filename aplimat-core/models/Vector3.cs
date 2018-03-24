@@ -9,6 +9,10 @@ namespace aplimat_core.models
     public class Vector3
     {
         public float x, y, z; //vector coordinates
+        public double v1;
+        private int v2;
+        private int v3;
+
         public Vector3() // default constructor, 0,0,0
         {
             x = 0; y = 0; z = 0;

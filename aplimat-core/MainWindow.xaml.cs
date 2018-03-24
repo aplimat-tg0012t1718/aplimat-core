@@ -23,15 +23,11 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Attractor Earth = new Attractor()
-        {
-            Mass = 5
-        };
 
-        private List<CubeMesh> Stars = new List<CubeMesh>();
-        private CubeMesh Star = new CubeMesh(-20, -30, 0);
+        private List<Attractor> Planets = new List<Attractor>();
         private Randomizer randomPos = new Randomizer(-30, 30);
-        private Randomizer randomMass = new Randomizer(1, 2);
+        private Randomizer randomMass = new Randomizer(0.1, 3);
+        private Randomizer colorRNG = new Randomizer(0, 1);
 
         public MainWindow()
         {
@@ -52,16 +48,21 @@ namespace aplimat_lab
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
 
-            Earth.Draw(gl);
-            Earth.Scale = new Vector3(Earth.Mass, Earth.Mass, Earth.Mass);
+            Attractor myPlanet = new Attractor();
+            myPlanet.Position = new Vector3((float)Gaussian.Generate(0, 30), randomPos.Generate(), 0);
+            myPlanet.Mass = (float)randomMass.GenerateDouble();
+            myPlanet.Scale = new Vector3(myPlanet.Mass, myPlanet.Mass, myPlanet.Mass);
+            myPlanet.Draw(gl);
+            Planets.Add(myPlanet);
 
-            for (int x = 0; x < 20; x++)
+            foreach(var planets in Planets)
             {
-                Stars.Add(new CubeMesh(randomPos.Generate(), randomPos.Generate(), 0));
-                Stars[x].Mass = randomMass.Generate();
-                Stars[x].Draw(gl);
-                Stars[x].Scale = new Vector3(Stars[x].Mass, Stars[x].Mass, Stars[x].Mass);
-                Stars[x].ApplyForce(Earth.CalculateAttraction(Stars[x]));
+                gl.Color((float)colorRNG.Generate(), (float)colorRNG.Generate(), (float)colorRNG.Generate());
+                planets.Draw(gl);
+                foreach(var planetsb in Planets)
+                {
+                    planets.ApplyForce(planetsb.CalculateAttraction(planets));
+                }
             }
 
             /// Draw Cubes
