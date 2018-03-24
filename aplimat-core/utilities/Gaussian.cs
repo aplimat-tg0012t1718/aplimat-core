@@ -19,5 +19,6 @@ namespace aplimat_core.utilities
 
             return mean + stdDev * randomStdNormal;
         }
+
     }
 }

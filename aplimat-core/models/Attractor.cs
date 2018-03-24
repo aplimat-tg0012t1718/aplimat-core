@@ -9,7 +9,7 @@ namespace aplimat_core.models
 {
     public class Attractor : CubeMesh
     {
-        public float G = 1f;
+        public float G = 1.0f;
 
         public Vector3 CalculateAttraction(Movable movable)
         {

@@ -23,16 +23,13 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Attractor Earth = new Attractor()
-        {
-            Mass = 3
-        };
-        private List<CubeMesh> stars = new List<CubeMesh>();
-        private CubeMesh Star = new CubeMesh(-20, -30, 0);
-        private Randomizer xRand = new Randomizer((double)-50,(double)50);
-        private Randomizer yRand = new Randomizer((double)-50,(double)50);
-        private Randomizer scaleRand = new Randomizer((double)1, (double)2.5);
+        private List<CubeMesh> stars = new List<CubeMesh>();      
+        private Randomizer yRand = new Randomizer(-30.0, 30.0);
+        private Randomizer scaleRand = new Randomizer(.1, 1.0);
+        private Randomizer colorRand = new Randomizer((double)0, (double)1);
+
         private int count = 0;
+        private int frames = 0; // "frames"
 
         public MainWindow()
         {
@@ -50,21 +47,41 @@ namespace aplimat_lab
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
 
-            if(count < 10)
+            frames++;
+            if(count < 90)
             {
-                CubeMesh star = new CubeMesh((float)xRand.GenerateDouble(), (float)yRand.GenerateDouble(), 0);
-                //star.Scale *= (float)Gaussian.Generate(1,1.5);
-                star.Scale *= (float)scaleRand.GenerateDouble();
+                float x = (float)Gaussian.Generate(-10,10);
+                float y = (float)yRand.GenerateDouble();
+                CubeMesh star = new CubeMesh(x, y, 0);
+                star.Mass = (float)Gaussian.Generate(.2, .5);
+                star.Scale = new Vector3(star.Mass, star.Mass, star.Mass);
                 stars.Add(star);
                 count++;
             }
 
-            Earth.Draw(gl);
-            Earth.Scale = new Vector3(Earth.Mass, Earth.Mass, Earth.Mass);
-
-            foreach (var star in stars) {
+            foreach (var star in stars)
+            {                                         
+                foreach (var other in stars)
+                {
+                    if (star != other)
+                    {
+                        Attractor pull = new Attractor();
+                        pull.Mass = star.Mass;
+                        Attractor otherPull = new Attractor();
+                        otherPull.Mass = other.Mass;
+                        other.ApplyForce(pull.CalculateAttraction(other));
+                        star.ApplyForce(otherPull.CalculateAttraction(star));
+                    }
+                }
                 star.Draw(gl);
-                star.ApplyForce(Earth.CalculateAttraction(star));
+                gl.Color(colorRand.GenerateDouble(), colorRand.GenerateDouble(),colorRand.GenerateDouble());
+            }
+
+            if(frames == 300)
+            {
+                frames = 0;
+                stars.Clear();
+                count = 0;
             }
         }
 
