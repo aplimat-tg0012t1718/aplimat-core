@@ -23,15 +23,19 @@ namespace aplimat_lab
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<CubeMesh> Cubes = new List<CubeMesh>();
-        private Vector3 Wind =new Vector3(0.05f,0,0);
-        private Liquid ocean = new Liquid(0, 0, 100, 50, 0.8f);
+        private Attractor Earth = new Attractor()
+        {
+            Mass = 5
+        };
 
-        private CubeMesh heavyCube = new CubeMesh(-5, 20, 0);
-        private CubeMesh lightCube = new CubeMesh(5, 20, 0);
+        private List<CubeMesh> Stars = new List<CubeMesh>();
+        private CubeMesh Star = new CubeMesh(-20, -30, 0);
+        private Randomizer randomPos = new Randomizer(-30, 30);
+        private Randomizer randomMass = new Randomizer(1, 2);
 
         public MainWindow()
         {
+            Title = "Gravitational Attraction";
             InitializeComponent();
 
         }
@@ -39,7 +43,6 @@ namespace aplimat_lab
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
-            this.Title = "Water Resistance";
             OpenGL gl = args.OpenGL;
 
             /// Clear The Screen And The Depth Buffer
@@ -49,49 +52,21 @@ namespace aplimat_lab
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
 
-            ocean.Draw(gl);
+            Earth.Draw(gl);
+            Earth.Scale = new Vector3(Earth.Mass, Earth.Mass, Earth.Mass);
 
-            gl.Color(1.0f, 1.0f, 1.0f);
+            for (int x = 0; x < 20; x++)
+            {
+                Stars.Add(new CubeMesh(randomPos.Generate(), randomPos.Generate(), 0));
+                Stars[x].Mass = randomMass.Generate();
+                Stars[x].Draw(gl);
+                Stars[x].Scale = new Vector3(Stars[x].Mass, Stars[x].Mass, Stars[x].Mass);
+                Stars[x].ApplyForce(Earth.CalculateAttraction(Stars[x]));
+            }
 
             /// Draw Cubes
             /// 
 
-            Cubes.Add(heavyCube);
-            Cubes.Add(new CubeMesh(-3, 20, 0));
-            Cubes.Add(new CubeMesh(-2, 20, 0));
-            Cubes.Add(new CubeMesh(-1, 20, 0));
-            Cubes.Add(new CubeMesh(0, 20, 0));
-            Cubes.Add(new CubeMesh(1, 20, 0));
-            Cubes.Add(new CubeMesh(2, 20, 0));
-            Cubes.Add(new CubeMesh(3, 20, 0));
-            Cubes.Add(new CubeMesh(4, 20, 0));
-            Cubes.Add(lightCube);
-
-            for (int x = 0; x < 10; x++)
-            {
-                Cubes[x].Draw(gl);
-                Cubes[x].Mass = 10 - x;
-                Cubes[x].applyGravity();
-            }
-
-            for (int x = 0; x < 10; x++)
-            {
-                if (Cubes[x].Position.y <= -40)
-                {
-                    Cubes[x].Position.y = -40;
-                    Cubes[x].Velocity.y *= -1;
-                }
-            }
-
-            for (int x = 0; x < 10; x++)
-            {
-                if (ocean.Contains(Cubes[x]))
-                {
-                    var dragForce = ocean.CalculateDragForce(Cubes[x]);
-                    Cubes[x].ApplyForce(dragForce);
-                    Cubes[x].ApplyForce(Wind);
-                }
-            }
         }
 
         #region Initialization
