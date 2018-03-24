@@ -24,26 +24,36 @@ namespace aplimat_lab
     public partial class MainWindow : Window
     {
 
-        private List<CubeMesh> cubes = new List<CubeMesh>();
+        //private List<CubeMesh> cubes = new List<CubeMesh>();
 
-        private CubeMesh heavyCube = new CubeMesh(-5, 20, 0);
-        private CubeMesh lightCube = new CubeMesh(5, 20, 0);
+        //private CubeMesh heavyCube = new CubeMesh(-5, 20, 0);
+        //private CubeMesh lightCube = new CubeMesh(5, 20, 0);
 
-        private Vector3 wind = new Vector3(0.1f, 0, 0);
+        //private Vector3 wind = new Vector3(0.1f, 0, 0);
 
-        private CubeMesh myCube = new CubeMesh(0, 20, 0);
+        //private CubeMesh myCube = new CubeMesh(0, 20, 0);
 
-        private Liquid ocean = new Liquid(0, 0, 100, 50, 0.8f);
+       // private Liquid ocean = new Liquid(0, 0, 100, 50, 0.8f);
+
+
+
+        private Attractor Earth = new Attractor()
+        {
+            Mass = 3
+        };
+        //private CubeMesh Star = new CubeMesh(-20, -30, 0);
+        private List<Attractor> Stars = new List<Attractor>();
+        
 
         public MainWindow()
         {
             InitializeComponent();
 
-            heavyCube.Mass = 3;
-            lightCube.Mass = 1;
+            //heavyCube.Mass = 3;
+            //lightCube.Mass = 1;
 
-            heavyCube.Scale = new Vector3(1 * heavyCube.Mass, 1 * heavyCube.Mass, 1 * heavyCube.Mass);
-            lightCube.Scale = new Vector3(1, 1, 1);
+            //heavyCube.Scale = new Vector3(1 * heavyCube.Mass, 1 * heavyCube.Mass, 1 * heavyCube.Mass);
+            //lightCube.Scale = new Vector3(1, 1, 1);
             
         }
 
@@ -66,7 +76,11 @@ namespace aplimat_lab
         //    Mass = 2
         //};
 
-        
+        private Randomizer starPos = new Randomizer(-30, 30);
+        private Randomizer starSize = new Randomizer(1, 3);
+
+        private Randomizer colorOn = new Randomizer(0, 1);
+
 
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
@@ -81,53 +95,94 @@ namespace aplimat_lab
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
 
-            ocean.Draw(gl);
 
+            #region earth star gravity
+            //Earth.Draw(gl);
+            //Earth.Scale = new Vector3(Earth.Mass, Earth.Mass, Earth.Mass);
 
-            gl.Color(1.0f, 1.0f, 1.0f);
-            
-            if (cubes.Count <= 10)
-            {
-                for (int i = 0; i <= 10; i++)
-                {
-                    cubes.Add(new CubeMesh()
-                    {
-                        Position = new Vector3(xPos, 20, 0),
-                        Mass = i
-                    });
-                    xPos -= 10;
-                }
-            }
+            //Star.Draw(gl);
+            //Star.ApplyForce(Earth.CalculateAttraction(Star));
 
-            foreach (var cube in cubes)
-            {
-                cube.Draw(gl);
-                cube.Scale = new Vector3(1 * cube.Mass/2, 1 * cube.Mass/2, 1 * cube.Mass/2);
-                
-                physicsTest(cube);
-            }
-            Console.WriteLine(cnt);
-
-            if (cnt == 100)
-            {
-                cnt = 0;
-                xPos = 50;
-                cubes.Clear();
-                
-            }
-
-            //myCube.Draw(gl);
-            //myCube.ApplyGravity();
-            //if(myCube.Position.y <= -40)
+            //if (Stars.Count <= 50)
             //{
-            //    myCube.Position.y = -40;
-            //    myCube.Velocity *= -1;
+            //    for (int i = 0; i <= 50; i++)
+            //    {
+            //        Stars.Add(new Attractor()
+            //        {
+            //            Position = new Vector3(starPos.GenerateInt(), starPos.GenerateInt(), 0),
+            //            Mass = starSize.GenerateInt()
+            //        });
+            //    }
             //}
 
+            if (Stars.Count <= 50)
+            {
+                Stars.Add(new Attractor()
+                {
+                    Position = new Vector3(Gaussian.Generate(0, starPos.GenerateInt()), Gaussian.Generate(0, starPos.GenerateInt()), 0),
+                    Mass = starSize.GenerateInt()
+                });
+            }
+            //if (Stars.Count > 50)
+            //{
+            //    Stars.RemoveAt(0);
+            //}
 
-            
+            //starPos.GenerateInt()
+            //Gaussian.Generate(0, 50)
+
+            foreach (var star in Stars)
+            {
+                gl.Color((float)colorOn.GenerateInt(), (float)colorOn.GenerateInt(), (float)colorOn.GenerateInt());
+
+                star.Draw(gl);
+                star.Scale = new Vector3(1 * star.Mass / 2, 1 * star.Mass / 2, 1 * star.Mass / 2);
+
+                //star.ApplyForce(Earth.CalculateAttraction(star));
+
+                foreach (var star2 in Stars)
+                {
+                    star.ApplyForce(star2.CalculateAttraction(star));
+                }
 
 
+            }
+
+            #endregion
+
+
+            #region cubes ocean
+            //ocean.Draw(gl);
+            //gl.Color(1.0f, 1.0f, 1.0f);
+
+            //if (cubes.Count <= 10)
+            //{
+            //    for (int i = 0; i <= 10; i++)
+            //    {
+            //        cubes.Add(new CubeMesh()
+            //        {
+            //            Position = new Vector3(xPos, 20, 0),
+            //            Mass = i
+            //        });
+            //        xPos -= 10;
+            //    }
+            //}
+
+            //foreach (var cube in cubes)
+            //{
+            //    cube.Draw(gl);
+            //    cube.Scale = new Vector3(1 * cube.Mass/2, 1 * cube.Mass/2, 1 * cube.Mass/2);
+
+            //    physicsTest(cube);
+            //}
+
+            //if (cnt == 100)
+            //{
+            //    cnt = 0;
+            //    xPos = 50;
+            //    cubes.Clear();
+            //}
+            #endregion
 
             #region quiz
             //CubeMesh myCube = new CubeMesh();
@@ -157,28 +212,15 @@ namespace aplimat_lab
 
         private void physicsTest(CubeMesh cube)
         {
-            //mousePos.Normalize();
-            //mousePos *= 1;
-            //cube.ApplyForce(mousePos);
-
-            //var frictionCoefficient = 0.05f;
-            //var normalForce = 1;
-            //var frictionMagnitude = frictionCoefficient * normalForce;
-
-            //var friction = cube.Velocity;
-            //friction *= -1;
-            //friction.Normalize();
-            //friction *= frictionMagnitude;
-
             cube.ApplyGravity();
             cube.ApplyFriction();
             
-            if (ocean.Contains(cube))
-            {
-                var dragForce = ocean.CalculateDragForce(cube);
-                cube.ApplyForce(dragForce);
-                cube.ApplyForce(wind);
-            }
+            //if (ocean.Contains(cube))
+            //{
+            //    var dragForce = ocean.CalculateDragForce(cube);
+            //    cube.ApplyForce(dragForce);
+            //    cube.ApplyForce(wind);
+            //}
             
             if (cube.Position.y <= boxB)
             {
