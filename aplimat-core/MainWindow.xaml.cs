@@ -60,13 +60,13 @@ namespace aplimat_lab
             }
 
             foreach (var star in stars)
-            {                                         
+            {
+                Attractor pull = new Attractor();
+                pull.Mass = star.Mass;
                 foreach (var other in stars)
                 {
                     if (star != other)
                     {
-                        Attractor pull = new Attractor();
-                        pull.Mass = star.Mass;
                         Attractor otherPull = new Attractor();
                         otherPull.Mass = other.Mass;
                         other.ApplyForce(pull.CalculateAttraction(other));
