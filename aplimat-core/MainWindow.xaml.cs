@@ -30,6 +30,14 @@ namespace aplimat_lab
 
         }
 
+        private Vector3 gravity = new Vector3(0, -1.0f, 0);
+        private Vector3 velocity = new Vector3(1, 0, 0);
+        private float speed = 1.0f;
+        private Randomizer yAxis = new Randomizer(30, 50);
+        private Vector3 mouseMove = new Vector3(2, 2, 0);
+
+        private List<CubeMesh> myCubes = new List<CubeMesh>();
+
         private void OpenGLControl_OpenGLDraw(object sender, SharpGL.SceneGraph.OpenGLEventArgs args)
         {
             OpenGL gl = args.OpenGL;
@@ -40,6 +48,43 @@ namespace aplimat_lab
             // Move Left And Into The Screen
             gl.LoadIdentity();
             gl.Translate(0.0f, 0.0f, -100.0f);
+
+            CubeMesh myCube = new CubeMesh();
+
+            // QUIZ # 1
+            myCube.Position = new Vector3((float)Gaussian.Generate(), yAxis.Generate(), 0);
+            myCubes.Add(myCube);
+
+            myCube.Draw(gl);
+            myCube.Position += velocity * speed;
+            //myCube.ApplyForce(gravity);
+
+            //myCube.ApplyForce(mouseMove);
+            //mouseMove.Normalize();
+
+            CubeMesh myCube2 = new CubeMesh();
+            myCubes.Add(myCube2);
+
+            foreach (var cube in myCubes)
+            {
+                gl.Color(Gaussian.Generate(0.0f, 1.0f), Gaussian.Generate(0.0f, 1.0f), Gaussian.Generate(0.0f, 1.0f));
+                cube.Draw(gl);
+            }
+            // QUIZ # 1
+
+            // QUIZ # 2
+            if (Keyboard.IsKeyDown (Key.D))
+            {
+                myCube2.Velocity.x += 0.5f;
+            }
+
+            if (myCube2.Position.x <= -40)
+            {
+                myCube2.Position.x = -40;
+                myCube2.Velocity.x *= +1;
+            }
+            // QUIZ # 2
+
         }
 
         #region Initialization
@@ -77,10 +122,12 @@ namespace aplimat_lab
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
             var position = e.GetPosition(this);
-            //to get X = (float)position.X - (float)Width / 2.0f;
-            //to get Y = -((float)position.Y - (float)Height / 2.0f);
+            mouseMove.x = (float)position.X - (float)Width / 2.0f;
+            mouseMove.y = -((float)position.Y - (float)Height / 2.0f);
         }
         #endregion
 
     }
 }
+
+
